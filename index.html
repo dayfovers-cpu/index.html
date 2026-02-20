@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Showcase Produk - Daftar Harga</title>
+    <!-- Menggunakan Bootstrap 5 untuk desain cepat dan responsif -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icon Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1000px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+        .table-header {
+            background-color: #0d6efd;
+            color: white;
+        }
+        /* Membuat baris tabel bisa diklik */
+        .clickable-row {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .clickable-row:hover {
+            background-color: #f1f1f1 !important;
+        }
+        /* Efek visual saat klik */
+        .clickable-row:active {
+            background-color: #e2e6ea;
+        }
+       .product-image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;   /* bikin kotak */
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+        .search-box {
+            border-radius: 20px;
+            padding-left: 20px;
+        }
+    
+/* GRID Lynkid Affiliate */
+#productShowcase {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+/* Card */
+.product-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Gambar */
+.product-image-wrapper {
+    width: 100%;
+    aspect-ratio: 1 / 1;   /* bikin kotak */
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.product-img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+/* Isi */
+.product-body {
+    padding: 12px;
+}
+
+.product-title {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 1.3;
+    height: 36px;
+    overflow: hidden;
+}
+
+.product-earn {
+    color: #00a86b;
+    font-weight: 700;
+    font-size: 13px;
+    margin-top: 6px;
+}
+
+.product-price {
+    font-size: 13px;
+    color: #555;
+}
+
+/* Tombol */
+.product-btn {
+    margin-top: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    padding: 8px;
+    background: linear-gradient(90deg,#2ecc71,#27ae60);
+    color: white;
+    font-weight: 600;
+}
+    .product-earn {
+    color: #00a86b;
+}
+    .product-id {
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    margin-bottom: 4px;
+}
+    
+    .category-wrapper {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.category-btn {
+    border: none;
+    padding: 8px 16px;
+    border-radius: 50px;
+    background: #f1f3f5;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.category-btn:hover {
+    background: #e2e6ea;
+}
+
+.category-btn.active {
+    background: linear-gradient(90deg,#2ecc71,#27ae60);
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+    
+    .product-img {
+    width: 100%;
+    height: 180px;
+    object-fit: contain;
+    background: white;
+    padding: 15px;
+}
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="mb-0"><i class="bi bi-bag-check"></i> Showcase Produk</h2>
+            
+        </div>
+
+       <!-- Fitur Search -->
+<div class="mb-4">
+    <input type="text"
+           id="searchInput"
+           class="form-control search-box"
+           placeholder="Cari nama produk..."
+        onkeyup="searchProducts()">
+</div>
+        
+
+
+<!-- Showcase Lynkid -->
+<div id="productShowcase" class="d-grid gap-3"></div>
+        
+        
+</div>
+        
+        <!-- Pesan jika data tidak ditemukan -->
+        <div id="noDataMessage" class="text-center py-5 d-none">
+            <i class="bi bi-emoji-frown fs-1 text-muted"></i>
+            <p class="mt-2 text-muted">Produk tidak ditemukan.</p>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript Logic -->
+<script>
+    // 1. Data Produk (Mock Data - Anda bisa mengubahnya sesuai kebutuhan)
+    
+
+    const showcase = document.getElementById('productShowcase');
+const noDataMessage = document.getElementById('noDataMessage');
+
+function renderShowcase(data) {
+    showcase.innerHTML = "";
+
+    if (data.length === 0) {
+        noDataMessage.classList.remove('d-none');
+        return;
+    }
+
+    noDataMessage.classList.add('d-none');
+
+    data.forEach(product => {
+        const price = new Intl.NumberFormat('id-ID', {
+            style: 'currency',
+            currency: 'IDR'
+        }).format(product.price);
+
+       
+        
+      
+
+        const card = document.createElement("div");
+        card.className = "product-card";
+
+        card.innerHTML = `
+           <div class="product-image-wrapper">
+    <img src="${product.image}" class="product-img">
+</div>
+
+            <div class="product-body">
+
+    <div class="product-id">
+        Produk #${product.id}
+    </div>
+               
+
+                <div class="product-title">
+                    ${product.name}
+                </div>
+
+                <div class="product-price">
+                    ${price}
+                </div>
+
+                <button class="product-btn"
+                    onclick="window.open('${product.link}','_blank')">
+                    beli
+                </button>
+            </div>
+        `;
+
+        showcase.appendChild(card);
+    });
+}
+const products = [
+    {
+        id: 1,
+        name: "Alda Baju Koko Pria Motif Bordir Bahan Katun Premium",
+        category: "Olahraga",
+        price: 120000,
+        image: "fk1.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9e2qUGQwNvh-Fsss2/"
+    },
+    {
+        id: 2,
+        name: "Alkalis Baju Koko Pria Motif Bordi Jasuke",
+        category: "Aksesoris",
+        price: 55000,
+        image: "fk2.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9e2bL9g5S66-DK800/"
+    },
+    {
+        id: 3,
+        name: "Baju Koko Pria Motif Bordir Kombinasi Batik Bahan Katun",
+        category: "Elektronik",
+        price: 95000,
+        image: "fk2.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9e2bPeHRVs9-Ze6MN/"
+    },
+    {
+        id: 4,
+        name: "Baju Koko Pria Kurta Bahan Katun",
+        category: "Elektronik",
+        price: 89999,
+        image: "fk3.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9e2bQKW1pN7-q0lJp/"
+    },
+    {
+        id: 5,
+        name: "kemeja pria polos lengan pendek best seller kain katun signature",
+        category: "Fashion",
+        price: 45000,
+        image: "fk5.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9e2GBnWL7k9-f9Hhd/"
+    },
+    {
+        id: 6,
+        name: "kemeja batik pria lengan panjang motif pusaka",
+        category: "Fashion",
+        price: 60000,
+        image: "fk6.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9e2tkY8THeK-t5tt5/"
+    },
+    {
+        id: 7,
+        name: "celana pangsi celana komprang celana sirwal dewasa",
+        category: "Fashion",
+        price: 35900,
+        image: "fk7.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejvh8E3BU7-ClR6c/"
+    },
+    {
+        id: 8,
+        name: "celana sirwal celana pria semi formal casual premium",
+        category: "Fashion",
+        price: 85500,
+        image: "fk8.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejvaV2srB6-Z8K2U/"
+    },
+    {
+        id: 9,
+        name: "celana training Jogger pants premium",
+        category: "Fashion",
+        price: 32500,
+        image: "fk9.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejc5WNPnqh-avdWX/"
+    },
+    {
+        id: 10,
+        name: "celana panjang training sweetpant baggy pria dewasa",
+        category: "Fashion",
+        price: 78000,
+        image: "fk10.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejcsdTrtNm-RQ4ap/"
+    },
+    {
+        id: 11,
+        name: "sarung batik sarang tawon pria dewasa",
+        category: "Fashion",
+        price: 34500,
+        image: "fk11.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ej3UbyovkF-tX4W1/"
+    },
+    {
+        id: 12,
+        name: "sarung batik sarang tawon pria dewasa",
+        category: "Fashion",
+        price: 34500,
+        image: "fk12.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ej3V7gjqoW-avIcZ/"
+    },
+    {
+        id: 13,
+        name: "sarung batik Pekalongan pria terbaru",
+        category: "Fashion",
+        price: 100000,
+        image: "fk13.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ej3KdAqTyg-lHi6n/"
+    },
+    {
+        id: 14,
+        name: "parfum minyak wangi non alkohol aroma khas Arab",
+        category: "Fashion",
+        price: 15000,
+        image: "fk14.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejTuMvbwUH-9xxn4/"
+    },
+    {
+        id: 15,
+        name: "kacamata Korean fashion anti UV",
+        category: "Fashion",
+        price: 25000,
+        image: "fk15.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejw1M5y36Y-UDQ4I/"
+    },
+    {
+        id: 16,
+        name: "Bros rumbai desain bintang kepingan salju",
+        category: "Fashion",
+        price: 60000,
+        image: "fk16.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejwaPFMhkp-CUdas/"
+    },
+    {
+        id: 17,
+        name: "tasbih 99 batu hitam ukuran 8mm",
+        category: "Fashion",
+        price: 12000,
+        image: "fk17.jpg",
+        link: "https://vt.tokopedia.com/t/ZS9ejKrodxKyw-FanJO/"
+    }
+];
+    // 3. Fungsi Search (Filter)
+function searchProducts() {
+    const input = document.getElementById('searchInput');
+    const filter = input.value.toLowerCase();
+
+    const filteredData = products.filter(product =>
+        product.name.toLowerCase().includes(filter) ||
+        product.category.toLowerCase().includes(filter) ||
+        product.id.toString().includes(filter)
+    );
+
+    renderShowcase(filteredData);
+}
+// Load awal
+renderShowcase(products);
+    
+    function filterCategory(category, button) {
+
+    // Hapus active dari semua tombol
+    document.querySelectorAll('.category-btn')
+        .forEach(btn => btn.classList.remove('active'));
+
+    // Tambah active ke tombol yg diklik
+    button.classList.add('active');
+
+    if (category === 'Semua') {
+        renderShowcase(products);
+    } else {
+        const filtered = products.filter(product =>
+            product.category === category
+        );
+        renderShowcase(filtered);
+    }
+}
+</script>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
